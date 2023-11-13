@@ -1,16 +1,16 @@
 # Guess the 3-Digit Password Game
 Introduction
-"Crack the Password" is a simple yet engaging web-based game where players try to guess a randomly generated 3-digit password within a limited number of attempts. 
+"Guess the Password" is a simple yet engaging web-based game where players try to guess a randomly generated 3-digit password within a limited number of attempts. 
 The game provides feedback on each guess, informing the player about the number of digits that are correct and whether they are in the correct position. 
 It features a hint system that can be used once per game, at the cost of a score penalty.
 
 ## Installation
-To set up "Crack the Password" on your local machine, follow these steps:
+To set up "Guess the Password" on your local machine, follow these steps:
 
 1. **Clone the Repository**
   ```bash
-  git clone https://github.com/yourusername/crack-the-password.git
-  cd crack-the-password
+  git clone https://github.com/yourusername/guess-the-password.git
+  cd guess-the-password
   ```
 2. **Open the Game**
 
@@ -26,7 +26,7 @@ You can use the "Hint" button once per game for assistance, but it will reduce y
 - **Hint Button**: Use to reveal any correct digits in their correct positions (one-time use).
 
 - ## Contributing
-Contributions to "Crack the Password" are welcome! If you have suggestions for improvements or bug fixes, feel free to:
+Contributions to "Guess the Password" are welcome! If you have suggestions for improvements or bug fixes, feel free to:
 
 1. Fork the repository.
 2. Create a new branch (`git checkout -b feature/AmazingFeature`).
@@ -42,5 +42,5 @@ Distributed under the MIT License. See 'LICENSE' for more information.
 
 
 This README provides a clear and concise explanation of your project and how to interact with it. 
-Make sure to replace https://github.com/yourusername/crack-the-password.git with the actual URL 
+Make sure to replace https://github.com/yourusername/guess-the-password.git with the actual URL 
 of your GitHub repository and adjust any specific details to match your project.
