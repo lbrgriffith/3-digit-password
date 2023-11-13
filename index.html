@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crack the Password</title>
+    <!-- Include Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .guess-input {
+            width: 50px;
+            margin: 5px;
+            text-align: center;
+        }
+        #guessButton, #hintButton {
+            width: 165px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="mt-4">Crack the Password Game</h2>
+        <p>Guess the 3-digit password. You have <strong id="attemptsLeft">10</strong> attempts left.</p>
+        <div id="finalAnswer" class="alert alert-info" style="display: none;"></div>
+        <div>
+            <input type="text" id="guess1" class="guess-input" maxlength="1">
+            <input type="text" id="guess2" class="guess-input" maxlength="1">
+            <input type="text" id="guess3" class="guess-input" maxlength="1">
+        </div>
+        <button class="btn btn-primary mt-2" id="guessButton" onclick="checkPassword()" disabled>Guess</button>
+        <button class="btn btn-secondary mt-2" id="hintButton" onclick="useHint()">Hint (-10%)</button>
+        <p id="score">Score: 100%</p>
+        <p id="feedback"></p>
+        <div id="history"></div>
+        <p id="reveal"></p>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
