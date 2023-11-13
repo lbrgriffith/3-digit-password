@@ -54,7 +54,7 @@ function processGuess(guess, isHint) {
             score -= 10;
         }
         document.getElementById('score').innerText = 'Score: ' + score + '%';
-        document.getElementById('feedback').innerText = feedback;
+        document.getElementById('feedback').innerHTML = feedback;
     }
 
     hintUsed = false;
