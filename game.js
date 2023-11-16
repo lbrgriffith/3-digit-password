@@ -57,18 +57,17 @@ class ConfettiCannon {
 
 function startConfetti() {
     const canvas = document.createElement('canvas');
-    canvas.style.position = 'fixed';  // Make canvas fixed position
+    canvas.style.position = 'fixed';
     canvas.style.top = '0';
     canvas.style.left = '0';
     canvas.style.width = '100%';
     canvas.style.height = '100%';
-    canvas.style.pointerEvents = 'none';  // Allow click events to pass through
-    canvas.style.zIndex = '9999';  // High z-index to ensure it's on top
+    canvas.style.pointerEvents = 'none';
+    canvas.style.zIndex = '9999';
     document.body.appendChild(canvas);
     const confetti = new ConfettiCannon(canvas);
     confetti.start();
 }
-
 
 let password = Array.from(String(Math.floor(Math.random() * 900 + 100)), Number);
 let attempts = 0;
@@ -104,53 +103,87 @@ function checkPassword() {
 }
 
 function processGuess(guess, isHint) {
+    // Convert guess array elements to numbers for accurate comparison
+    guess = guess.map(Number);
+
+    // Check if maximum attempts have been reached and end the game if so
+    if (attempts >= 10) {
+        document.getElementById('feedback').innerText = 'No more attempts left. Game over.';
+        revealPassword();
+        disableInputs();
+        return;
+    }
+
     let correctWellPlaced = 0;
     let correctButWrongPlace = 0;
-    let usedPositions = new Set(); // To track used positions in the password
+    let passwordCopy = [...password]; // Create a copy of the password for manipulation
 
-    // First pass to find correct and well-placed numbers
-    for (let i = 0; i < 3; i++) {
-        if (guess[i] === password[i]) {
+    // Count correct and well-placed numbers
+    for (let i = 0; i < guess.length; i++) {
+        if (guess[i] === passwordCopy[i]) {
             correctWellPlaced++;
-            usedPositions.add(i);
+            passwordCopy[i] = null; // Mark this number as counted
         }
     }
 
-    // Second pass to find correct but wrongly placed numbers
-    for (let i = 0; i < 3; i++) {
-        let indexOfNumInPassword = password.indexOf(guess[i]);
-        if (guess[i] !== password[i] && password.includes(guess[i]) && !usedPositions.has(indexOfNumInPassword)) {
+    // Count correct but wrongly placed numbers
+    for (let i = 0; i < guess.length; i++) {
+        let indexOfNumInPasswordCopy = passwordCopy.indexOf(guess[i]);
+        if (guess[i] !== password[i] && indexOfNumInPasswordCopy !== -1) {
             correctButWrongPlace++;
-            usedPositions.add(indexOfNumInPassword);
+            passwordCopy[indexOfNumInPasswordCopy] = null; // Mark this number as counted
         }
     }
 
-    let feedback = `${correctWellPlaced} correct, well placed | ` +
-                   `${correctButWrongPlace} correct, wrongly placed`;
+    // Directly include feedback in the history without separate display
+    let feedback = `${correctWellPlaced} correct, well placed | ${correctButWrongPlace} correct, wrongly placed`;
+    updateHistory(guess.join(''), feedback, isHint);
+
+    if (correctWellPlaced === 3) {
+        // Player has guessed the number correctly
+        revealPassword();
+        startConfetti();
+        // Add winning message to history
+        updateHistory(guess.join(''), 'Congratulations! You guessed it right.', false);
+        disableInputs();
+        return; // Exit the function to stop further processing
+    } 
 
     if (!isHint) {
         attempts++;
         document.getElementById('attemptsLeft').innerHTML = 10 - attempts;
+        score -= 10;
+        document.getElementById('score').innerText = 'Score: ' + score;
     }
 
-    updateHistory(guess.join(''), feedback, isHint); // Update history with current guess
-
-    if (correctWellPlaced === 3 || score <= 0 || attempts >= 10) {
-        revealPassword(); // Reveal password if game is over
-        if (correctWellPlaced === 3) {
-            startConfetti(); // Start confetti if won
-        }
-    } else {
-        if (!isHint) {
-            attempts++;
-            document.getElementById('attemptsLeft').innerHTML = 10 - attempts;
-            score -= 10;
-        }
-        document.getElementById('score').innerText = 'Score: ' + score;
+    if (attempts >= 10) {
+        // Game over due to reaching maximum attempts
+        revealPassword();
+        disableInputs();
+        // Add game over message to history
+        updateHistory(guess.join(''), 'Game over. The correct number was ' + password.join(''), false);
     }
 
     hintUsed = false;
 }
+
+function disableInputs() {
+    for (let i = 1; i <= 3; i++) {
+        document.getElementById('guess' + i).disabled = true;
+    }
+    document.getElementById('guessButton').disabled = true;
+    document.getElementById('hintButton').disabled = true;
+}
+
+
+function disableInputs() {
+    for (let i = 1; i <= 3; i++) {
+        document.getElementById('guess' + i).disabled = true;
+    }
+    document.getElementById('guessButton').disabled = true;
+    document.getElementById('hintButton').disabled = true;
+}
+
 
 
 function giveUp() {
@@ -212,8 +245,6 @@ function updateHistory(guess, feedback, isHint) {
         `<p><strong>${h.guess}</strong> - ${h.feedback} ${h.hint ? ' (' + h.hint + ')' : ''}</p>`).join('');
 }
 
-
-
 function revealPassword() {
     // Display the correct password in the input boxes
     for (let i = 0; i < 3; i++) {
@@ -226,7 +257,6 @@ function revealPassword() {
     let finalMessage = score > 0 ? 'Congratulations! The correct number was ' : 'Game over. The correct number was ';
     document.getElementById('reveal').innerText = finalMessage + password.join('');
 }
-
 
 // Automatically focus the next input field and enable the guess button after a digit is entered
 document.querySelectorAll('.guess-input').forEach(input => {
