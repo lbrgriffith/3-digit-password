@@ -134,7 +134,6 @@ function processGuess(guess, isHint) {
     }
 }
 
-
 function useHint() {
     if (score > 0 && !hintUsed) {
         hintUsed = true;
@@ -178,7 +177,6 @@ function updateHistory(guess, feedback, isHint) {
         '<p>' + (index + 1) + '. <strong>' + h.guess + '</strong> - ' + h.feedback + (h.hint ? ' (' + h.hint + ')' : '') + '</p>').join('');
 }
 
-
 function revealPassword() {
     let finalAnswer = document.getElementById('finalAnswer');
     finalAnswer.style.display = 'block';
@@ -203,3 +201,20 @@ function updateGuessButtonState() {
                          .every(input => input.value.length === 1);
     document.getElementById('guessButton').disabled = !allFilled;
 }
+
+// Initialize event listeners for Enter key on input fields
+function setupEnterKeySubmission() {
+    document.getElementById('guess1').addEventListener('keypress', handleKeyPress);
+    document.getElementById('guess2').addEventListener('keypress', handleKeyPress);
+    document.getElementById('guess3').addEventListener('keypress', handleKeyPress);
+}
+
+// Function to handle keypress event on input fields
+function handleKeyPress(event) {
+    if (event.key === "Enter") {
+        checkPassword();
+    }
+}
+
+// Call the setup function at the end of the script
+setupEnterKeySubmission();
