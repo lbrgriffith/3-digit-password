@@ -72,10 +72,25 @@ function startConfetti() {
 
 let password = Array.from(String(Math.floor(Math.random() * 900 + 100)), Number);
 let attempts = 0;
-let score = 100;
+let score = 100; // Starting score as an integer
 let history = [];
 let hintUsed = false;
 let lastGuess = [];
+
+// Set focus to the first input box when the page loads
+window.onload = () => {
+    document.getElementById('guess1').focus();
+};
+
+function clearInputs() {
+    // Clear inputs and reset focus
+    for (let i = 1; i <= 3; i++) {
+        let input = document.getElementById('guess' + i);
+        input.value = '';
+        input.disabled = false; // Re-enable in case it was disabled
+    }
+    document.getElementById('guess1').focus(); // Reset focus to the first input
+}
 
 function checkPassword() {
     lastGuess = [
@@ -110,8 +125,8 @@ function processGuess(guess, isHint) {
         }
     }
 
-    let feedback = `${correctWellPlaced} number(s) correct and well placed. ` +
-                   `${correctButWrongPlace} number(s) correct but wrongly placed.`;
+    let feedback = `${correctWellPlaced} correct and well placed | ` +
+                   `${correctButWrongPlace} correct but wrongly placed`;
 
     if (!isHint) {
         attempts++;
@@ -120,27 +135,25 @@ function processGuess(guess, isHint) {
 
     updateHistory(guess.join(''), feedback, isHint);
 
-    if (correctWellPlaced === 3) {
-        feedback = 'Congratulations! You guessed it right.';
+    if (correctWellPlaced === 3 || score <= 0 || attempts >= 10) {
+        feedback = (correctWellPlaced === 3 ? 'Congratulations! You guessed it right.' : 'Game over. Your final score is ' + score + '%.');
         document.getElementById('feedback').innerText = feedback;
         revealPassword();
-        startConfetti();
+        if (correctWellPlaced === 3) {
+            startConfetti();
+        }
     } else {
         if (!isHint) {
-            score -= 10;
+            score -= 10; // Subtract 10 points for each guess
         }
-        document.getElementById('score').innerText = 'Score: ' + score + '%';
+        document.getElementById('score').innerText = 'Score: ' + score;
         document.getElementById('feedback').innerText = feedback;
     }
 
     hintUsed = false;
-
-    if (score === 0 || attempts === 10) {
-        feedback = 'Game over. Your final score is ' + score + '%.';
-        document.getElementById('feedback').innerText = feedback;
-        revealPassword();
-    }
 }
+
+
 
 function useHint() {
     if (score > 0 && !hintUsed) {
@@ -151,18 +164,15 @@ function useHint() {
         for (let i = 0; i < 3; i++) {
             let guessInput = document.getElementById('guess' + (i + 1));
             if (lastGuess[i] === password[i]) {
-                guessInput.value = password[i];
-                guessInput.disabled = true;
-                guessInput.style.backgroundColor = 'lightgreen';
-            } else {
-                guessInput.value = ''; // Clear incorrect guesses
+                guessInput.value = password[i]; // Display correct number
+                guessInput.disabled = true; // Lock input
+                guessInput.style.backgroundColor = 'lightgreen'; // Optional: change background to indicate correct guess
             }
         }
 
         document.getElementById('hintButton').disabled = true;
-        processGuess(lastGuess, true);
+        // No need to call processGuess here as it's only for checking the guess
     }
-    updateGuessButtonState();
 }
 
 function clearInputs() {
@@ -181,15 +191,23 @@ function updateHistory(guess, feedback, isHint) {
     history.push({ guess: guess, feedback: feedback, hint: hintMessage });
     let historyElement = document.getElementById('history');
     
-    historyElement.innerHTML = '<h4>Guess History:</h4>' + history.map((h, index) => 
-        '<p>' + (index + 1) + '. <strong>' + h.guess + '</strong> - ' + h.feedback + (h.hint ? ' (' + h.hint + ')' : '') + '</p>').join('');
+    historyElement.innerHTML = '<h4>Guess History:</h4>' + history.slice().reverse().map((h, index) => 
+        `<p>${index + 1}. <strong>${h.guess}</strong> - ${h.feedback} ${h.hint ? ' (' + h.hint + ')' : ''}</p>`).join('');
 }
 
 function revealPassword() {
-    let finalAnswer = document.getElementById('finalAnswer');
-    finalAnswer.style.display = 'block';
-    finalAnswer.innerHTML = '<strong>' + password.join('') + '</strong> was the password!';
+    // Display the correct password in the input boxes
+    for (let i = 0; i < 3; i++) {
+        let guessInput = document.getElementById('guess' + (i + 1));
+        guessInput.value = password[i];
+        guessInput.disabled = true; // Optional: lock the input boxes
+        guessInput.style.backgroundColor = '#ffff99'; // Optional: change background color
+    }
+
+    let finalMessage = score > 0 ? 'Congratulations! The correct number was ' : 'Game over. The correct number was ';
+    document.getElementById('reveal').innerText = finalMessage + password.join('');
 }
+
 
 // Automatically focus the next input field and enable the guess button after a digit is entered
 document.querySelectorAll('.guess-input').forEach(input => {

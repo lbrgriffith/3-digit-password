@@ -1,0 +1,24 @@
+.guess-input {
+    width: 50px; /* Increased width */
+    margin: 5px; /* Added space between inputs */
+    text-align: center;
+    font-size: 20px; /* Larger font size for better visibility */
+    border: 2px solid lightslategray; /* Blue border */
+}
+.input-group, .btn-group-vertical {
+    justify-content: center;
+}
+.btn-wide {
+    width: 100%;
+}
+.score-container {
+    position: absolute;
+    top: 10px;
+    right: 20px; /* Increased right margin for buffering */
+    font-size: 20px;
+    z-index: 1000;
+    background: white;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: Adding a subtle shadow for better visibility */
+}
