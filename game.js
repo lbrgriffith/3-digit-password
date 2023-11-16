@@ -1,3 +1,67 @@
+class ConfettiPiece {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = (Math.random() * 0.5 + 0.75) * 15;
+        this.gravity = Math.random() * 0.01 + 0.01;
+        this.rotation = Math.PI * 2 * Math.random();
+        this.rotationSpeed = Math.PI * 2 * Math.random() * 0.001;
+        this.color = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 1)`;
+        this.velocityX = Math.random() * 2 - 1;  // Horizontal movement
+        this.velocityY = Math.random() * -3 - 1; // Initial upward movement
+    }
+
+    update() {
+        this.x += this.velocityX;
+        this.y += this.velocityY;
+        this.velocityY += this.gravity; // Gravity applied
+        this.rotation += this.rotationSpeed;
+    }
+
+    draw(ctx) {
+        ctx.save();
+        ctx.fillStyle = this.color;
+        ctx.translate(this.x + this.size / 2, this.y + this.size / 2);
+        ctx.rotate(this.rotation);
+        ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+        ctx.restore();
+    }
+}
+
+class ConfettiCannon {
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.confettiPieces = [];
+    }
+
+    start() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+        for (let i = 0; i < 100; i++) {
+            this.confettiPieces.push(new ConfettiPiece(Math.random() * this.canvas.width, Math.random() * this.canvas.height));
+        }
+        this.update();
+    }
+
+    update() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.confettiPieces.forEach(piece => {
+            piece.update();
+            piece.draw(this.ctx);
+        });
+
+        requestAnimationFrame(this.update.bind(this));
+    }
+}
+
+function startConfetti() {
+    const canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    const confetti = new ConfettiCannon(canvas);
+    confetti.start();
+}
+
 let password = Array.from(String(Math.floor(Math.random() * 900 + 100)), Number);
 let attempts = 0;
 let score = 100;
@@ -17,27 +81,29 @@ function checkPassword() {
 }
 
 function processGuess(guess, isHint) {
-    let feedback = '';
     let correctWellPlaced = 0;
     let correctButWrongPlace = 0;
-    let guessCopy = [...guess];
+    let usedPositions = new Set(); // To track used positions in the password
 
+    // First pass to find correct and well-placed numbers
     for (let i = 0; i < 3; i++) {
-        if (guessCopy[i] === password[i]) {
+        if (guess[i] === password[i]) {
             correctWellPlaced++;
-            guessCopy[i] = null;
-            document.getElementById('guess' + (i + 1)).readOnly = true; // Make correct guesses read-only
+            usedPositions.add(i);
         }
     }
 
-    guessCopy.forEach((num, i) => {
-        if (num !== null && password.includes(num) && num !== password[i]) {
+    // Second pass to find correct but wrongly placed numbers
+    for (let i = 0; i < 3; i++) {
+        let indexOfNumInPassword = password.indexOf(guess[i]);
+        if (guess[i] !== password[i] && password.includes(guess[i]) && !usedPositions.has(indexOfNumInPassword)) {
             correctButWrongPlace++;
+            usedPositions.add(indexOfNumInPassword);
         }
-    });
+    }
 
-    feedback = `<strong>${correctWellPlaced}</strong> number(s) correct and well placed. ` +
-               `<strong>${correctButWrongPlace}</strong> number(s) correct but in the wrong position.`;
+    let feedback = `${correctWellPlaced} number(s) correct and well placed. ` +
+                   `${correctButWrongPlace} number(s) correct but wrongly placed.`;
 
     if (!isHint) {
         attempts++;
@@ -48,13 +114,15 @@ function processGuess(guess, isHint) {
 
     if (correctWellPlaced === 3) {
         feedback = 'Congratulations! You guessed it right.';
+        document.getElementById('feedback').innerText = feedback;
         revealPassword();
+        startConfetti();
     } else {
         if (!isHint) {
             score -= 10;
         }
         document.getElementById('score').innerText = 'Score: ' + score + '%';
-        document.getElementById('feedback').innerHTML = feedback;
+        document.getElementById('feedback').innerText = feedback;
     }
 
     hintUsed = false;
@@ -65,6 +133,7 @@ function processGuess(guess, isHint) {
         revealPassword();
     }
 }
+
 
 function useHint() {
     if (score > 0 && !hintUsed) {
