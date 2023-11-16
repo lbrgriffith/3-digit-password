@@ -57,10 +57,18 @@ class ConfettiCannon {
 
 function startConfetti() {
     const canvas = document.createElement('canvas');
+    canvas.style.position = 'fixed';  // Make canvas fixed position
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.pointerEvents = 'none';  // Allow click events to pass through
+    canvas.style.zIndex = '9999';  // High z-index to ensure it's on top
     document.body.appendChild(canvas);
     const confetti = new ConfettiCannon(canvas);
     confetti.start();
 }
+
 
 let password = Array.from(String(Math.floor(Math.random() * 900 + 100)), Number);
 let attempts = 0;
