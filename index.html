@@ -18,7 +18,8 @@
 <body>
     <div class="container">
         <h2 class="mt-4">Crack the Password Game</h2>
-        <p>Guess the 3-digit password. You have <strong id="attemptsLeft">10</strong> attempts left.</p>
+        <p>Guess the 3-digit password. Each digit can range from 0 to 9. Duplicates are possible!</p>
+        <p>You have <span id="attemptsLeft">10</span> attempts left.</p>
         <div id="finalAnswer" class="alert alert-info" style="display: none;"></div>
         <div>
             <input type="text" id="guess1" class="guess-input" maxlength="1">
