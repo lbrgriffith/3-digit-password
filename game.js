@@ -125,45 +125,63 @@ function processGuess(guess, isHint) {
         }
     }
 
-    let feedback = `${correctWellPlaced} correct and well placed | ` +
-                   `${correctButWrongPlace} correct but wrongly placed`;
+    let feedback = `${correctWellPlaced} correct, well placed | ` +
+                   `${correctButWrongPlace} correct, wrongly placed`;
 
     if (!isHint) {
         attempts++;
         document.getElementById('attemptsLeft').innerHTML = 10 - attempts;
     }
 
-    updateHistory(guess.join(''), feedback, isHint);
+    updateHistory(guess.join(''), feedback, isHint); // Update history with current guess
 
     if (correctWellPlaced === 3 || score <= 0 || attempts >= 10) {
-        feedback = (correctWellPlaced === 3 ? 'Congratulations! You guessed it right.' : 'Game over. Your final score is ' + score + '%.');
-        document.getElementById('feedback').innerText = feedback;
-        revealPassword();
+        revealPassword(); // Reveal password if game is over
         if (correctWellPlaced === 3) {
-            startConfetti();
+            startConfetti(); // Start confetti if won
         }
     } else {
         if (!isHint) {
-            score -= 10; // Subtract 10 points for each guess
+            attempts++;
+            document.getElementById('attemptsLeft').innerHTML = 10 - attempts;
+            score -= 10;
         }
         document.getElementById('score').innerText = 'Score: ' + score;
-        document.getElementById('feedback').innerText = feedback;
     }
 
     hintUsed = false;
 }
 
 
+function giveUp() {
+    // Reveal the correct password
+    revealPassword();
+
+    // Disable further inputs and buttons
+    for (let i = 1; i <= 3; i++) {
+        let input = document.getElementById('guess' + i);
+        input.disabled = true;
+    }
+    document.getElementById('guessButton').disabled = true;
+    document.getElementById('hintButton').disabled = true;
+
+    // Update the game over message
+    document.getElementById('feedback').innerText = 'Game over. The correct number was ' + password.join('');
+    score = 0; // Optional: Set score to 0 as game is given up
+    document.getElementById('score').innerText = 'Score: ' + score;
+}
+
 
 function useHint() {
     if (score > 0 && !hintUsed) {
         hintUsed = true;
         score -= 10;
-        document.getElementById('score').innerText = 'Score: ' + score + '%';
+        document.getElementById('score').innerText = 'Score: ' + score;
 
+        // Iterate over each guess input
         for (let i = 0; i < 3; i++) {
             let guessInput = document.getElementById('guess' + (i + 1));
-            if (lastGuess[i] === password[i]) {
+            if (guessInput.value === '' && password[i] === lastGuess[i]) {
                 guessInput.value = password[i]; // Display correct number
                 guessInput.disabled = true; // Lock input
                 guessInput.style.backgroundColor = 'lightgreen'; // Optional: change background to indicate correct guess
@@ -171,7 +189,6 @@ function useHint() {
         }
 
         document.getElementById('hintButton').disabled = true;
-        // No need to call processGuess here as it's only for checking the guess
     }
 }
 
@@ -188,12 +205,14 @@ function clearInputs() {
 
 function updateHistory(guess, feedback, isHint) {
     let hintMessage = isHint ? 'Hint used' : '';
-    history.push({ guess: guess, feedback: feedback, hint: hintMessage });
+    history.unshift({ guess: guess, feedback: feedback, hint: hintMessage }); // Add new guess to the start of the array
+
     let historyElement = document.getElementById('history');
-    
-    historyElement.innerHTML = '<h4>Guess History:</h4>' + history.slice().reverse().map((h, index) => 
-        `<p>${index + 1}. <strong>${h.guess}</strong> - ${h.feedback} ${h.hint ? ' (' + h.hint + ')' : ''}</p>`).join('');
+    historyElement.innerHTML = '<h4>Guess History:</h4>' + history.map((h) => 
+        `<p><strong>${h.guess}</strong> - ${h.feedback} ${h.hint ? ' (' + h.hint + ')' : ''}</p>`).join('');
 }
+
+
 
 function revealPassword() {
     // Display the correct password in the input boxes

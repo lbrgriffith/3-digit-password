@@ -25,9 +25,9 @@
                         <div class="btn-group-vertical w-100">
                             <button class="btn btn-primary btn-wide" id="guessButton" onclick="checkPassword()" disabled>Guess</button>
                             <button class="btn btn-secondary btn-wide mt-2" id="hintButton" onclick="useHint()">Hint (-10 Points)</button>
+                            <button class="btn btn-danger btn-wide mt-2" id="giveUpButton" onclick="giveUp()">I Give Up</button>
                         </div>
                         
-                        <p id="feedback"></p>
                         <div id="history"></div>
                         <p id="reveal"></p>
                     </div>
@@ -37,7 +37,6 @@
     </div>
 
     <!-- Include your JavaScript Files -->
-    <script src="confetti.js"></script>
     <script src="game.js"></script>
 </body>
 </html>
