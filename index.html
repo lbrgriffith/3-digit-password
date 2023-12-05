@@ -1,37 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Crack the Password</title>
-    <!-- Include Bootstrap 5 CSS -->
+    <title>Puzzle Padlock</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .guess-input {
-            width: 50px;
-            margin: 5px;
-            text-align: center;
-        }
-        #guessButton, #hintButton {
-            width: 165px;
-        }
-    </style>
+    <link href="game.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-    <div class="container">
-        <h2 class="mt-4">Crack the Password Game</h2>
-        <p>Guess the 3-digit password. You have <strong id="attemptsLeft">10</strong> attempts left.</p>
-        <div id="finalAnswer" class="alert alert-info" style="display: none;"></div>
-        <div>
-            <input type="text" id="guess1" class="guess-input" maxlength="1">
-            <input type="text" id="guess2" class="guess-input" maxlength="1">
-            <input type="text" id="guess3" class="guess-input" maxlength="1">
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6 position-relative"> <!-- Added position-relative here -->
+                <div class="score-container" id="score">Score: 100</div> <!-- Score container -->
+
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Puzzle Padlock</h2>
+                        <p class="card-text">Guess the 3-digit code. Each digit ranges from 0 to 9. Duplicates are possible! You have <span id="attemptsLeft">10</span> attempts left.</p>
+                        
+                        <!-- Draggable Numbers -->
+                        <div id="draggableNumbers" class="my-3">
+                            <div class="draggable" draggable="true" data-number="0">0</div>
+                            <div class="draggable" draggable="true" data-number="1">1</div>
+                            <div class="draggable" draggable="true" data-number="2">2</div>
+                            <div class="draggable" draggable="true" data-number="3">3</div>
+                            <div class="draggable" draggable="true" data-number="4">4</div>
+                            <div class="draggable" draggable="true" data-number="5">5</div>
+                            <div class="draggable" draggable="true" data-number="6">6</div>
+                            <div class="draggable" draggable="true" data-number="7">7</div>
+                            <div class="draggable" draggable="true" data-number="8">8</div>
+                            <div class="draggable" draggable="true" data-number="9">9</div>
+                        </div>
+
+                        <!-- Drop Zones for Guesses -->
+                        <div class="input-group mb-2">
+                            <div id="dropzone1" class="dropzone"></div>
+                            <div id="dropzone2" class="dropzone"></div>
+                            <div id="dropzone3" class="dropzone"></div>
+                        </div>
+
+                        <!-- Container for Winning Message -->
+                        <div id="winningMessage" class="text-center my-2"></div>
+                        <!-- Example of an element to display the correct password -->
+                        <div id="correctPassword"></div>
+
+                        
+                        <div class="btn-group-vertical w-100">
+                            <button class="btn btn-primary btn-wide" id="guessButton" onclick="checkPassword()" disabled>Guess</button>
+                            <button class="btn btn-secondary btn-wide mt-2" id="hintButton" onclick="useHint()">Hint (-10 Points)</button>
+                            <button class="btn btn-danger btn-wide mt-2" id="giveUpButton" onclick="giveUp()">I Give Up</button>
+                        </div>
+                        
+                        <div id="history"></div>
+                        <p id="reveal"></p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <button class="btn btn-primary mt-2" id="guessButton" onclick="checkPassword()" disabled>Guess</button>
-        <button class="btn btn-secondary mt-2" id="hintButton" onclick="useHint()">Hint (-10%)</button>
-        <p id="score">Score: 100%</p>
-        <p id="feedback"></p>
-        <div id="history"></div>
-        <p id="reveal"></p>
     </div>
+
+    <!-- Include your JavaScript Files -->
     <script src="game.js"></script>
 </body>
 </html>
