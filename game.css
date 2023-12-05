@@ -59,3 +59,7 @@
     background-color: lightgrey; /* Background color for visibility */
     border-radius: 10px; /* Rounded corners */
 }
+.dropzone.disabled {
+    background-color: #ddd; // Example: gray background to indicate it's locked
+    pointer-events: none; // Prevent further interaction
+}

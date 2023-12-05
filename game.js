@@ -123,10 +123,11 @@ function processGuess(guess, isHint) {
     updateHistory(guess.join(''), feedback, isHint);
 
     if (correctWellPlaced === 3) {
-        document.getElementById('winningMessage').innerText = 'Congratulations! You guessed it right.';
-        revealPassword();
-        startConfetti();
-        disableInputs();
+                // Player has guessed the number correctly
+                document.getElementById('winningMessage').innerText = 'Congratulations! You guessed it right.';
+                displayWinningNumber();
+                startConfetti();
+                disableInputs();
     } else {
         if (!isHint) {
             attempts++;
@@ -198,44 +199,46 @@ function disableInputs() {
     document.getElementById('hintButton').disabled = true;
 }
 
-
-
 function giveUp() {
     // Reveal the correct password
     revealPassword();
 
     // Disable further inputs and buttons
-    for (let i = 1; i <= 3; i++) {
-        let input = document.getElementById('guess' + i);
-        input.disabled = true;
-    }
-    document.getElementById('guessButton').disabled = true;
-    document.getElementById('hintButton').disabled = true;
+    document.querySelectorAll('.dropzone').forEach(zone => {
+        zone.classList.add('disabled'); // Disable the dropzones
+    });
+
+    const guessButton = document.getElementById('guessButton');
+    const hintButton = document.getElementById('hintButton');
+
+    if (guessButton) guessButton.disabled = true;
+    if (hintButton) hintButton.disabled = true;
 
     // Update the game over message
-    document.getElementById('feedback').innerText = 'Game over. The correct number was ' + password.join('');
-    score = 0; // Optional: Set score to 0 as game is given up
-    document.getElementById('score').innerText = 'Score: ' + score;
+    document.getElementById('winningMessage').innerText = 'Game over. The correct number was ' + password.join('');
 }
-
 
 function useHint() {
     if (score > 0 && !hintUsed) {
         hintUsed = true;
-        score -= 10;
+        score -= 10; // Deduct points for using a hint
         document.getElementById('score').innerText = 'Score: ' + score;
 
-        // Iterate over each guess input
-        for (let i = 0; i < 3; i++) {
-            let guessInput = document.getElementById('guess' + (i + 1));
-            if (guessInput.value === '' && password[i] === lastGuess[i]) {
-                guessInput.value = password[i]; // Display correct number
-                guessInput.disabled = true; // Lock input
-                guessInput.style.backgroundColor = 'lightgreen'; // Optional: change background to indicate correct guess
-            }
-        }
+        // Reveal and lock the first digit of the password
+        let firstDropzone = document.getElementById('dropzone1');
+        firstDropzone.textContent = password[0];
+        firstDropzone.classList.add('disabled'); // Lock this dropzone
 
-        document.getElementById('hintButton').disabled = true;
+        document.getElementById('hintButton').disabled = true; // Disable further use of hint
+    }
+}
+
+
+function displayWinningNumber() {
+    for (let i = 0; i < password.length; i++) {
+        let dropzone = document.getElementById(`dropzone${i + 1}`);
+        dropzone.textContent = password[i];
+        dropzone.classList.add('disabled'); // Optionally disable further interaction
     }
 }
 
@@ -320,16 +323,24 @@ document.querySelectorAll('.dropzone').forEach(elem => {
 });
 
 function clearDropzones() {
-    document.querySelectorAll('.dropzone').forEach(zone => {
-        zone.textContent = ''; // Clear the content of each dropzone
-    });
+    // Clear the dropzones only if they are not disabled
+    for (let i = 1; i <= 3; i++) {
+        let dropzone = document.getElementById(`dropzone${i}`);
+        if (!dropzone.classList.contains('disabled')) {
+            dropzone.textContent = ''; // Clear the content of the dropzone
+        }
+    }
     updateGameGuessState(); // Update the game state after clearing
 }
 
 
 function updateGameGuessState() {
-    lastGuess = Array.from(document.querySelectorAll('.dropzone')).map(zone => {
-        return zone.textContent ? parseInt(zone.textContent, 10) : null;
-    });
-    document.getElementById('guessButton').disabled = lastGuess.includes(null) || lastGuess.length < 3;
+    lastGuess = [];
+    for (let i = 1; i <= 3; i++) {
+        let dropzone = document.getElementById(`dropzone${i}`);
+        let number = dropzone.textContent;
+        lastGuess.push(number ? parseInt(number, 10) : null);
+    }
+
+    document.getElementById('guessButton').disabled = !lastGuess.every(num => num !== null);
 }
