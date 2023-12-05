@@ -76,11 +76,6 @@ let history = [];
 let hintUsed = false;
 let lastGuess = [];
 
-// Set focus to the first input box when the page loads
-window.onload = () => {
-    document.getElementById('guess1').focus();
-};
-
 function clearInputs() {
     // Clear inputs and reset focus
     for (let i = 1; i <= 3; i++) {
@@ -92,80 +87,102 @@ function clearInputs() {
 }
 
 function checkPassword() {
-    lastGuess = [
-        parseInt(document.getElementById('guess1').value),
-        parseInt(document.getElementById('guess2').value),
-        parseInt(document.getElementById('guess3').value)
-    ];
+    // Assuming lastGuess array is updated correctly from the drag-and-drop logic
+    if (lastGuess.length === 3) {
+        processGuess(lastGuess, false);
+    }
 
-    processGuess(lastGuess, false);
-    clearInputs();
+     // Clear the dropzones after making a guess
+     clearDropzones();
 }
 
 function processGuess(guess, isHint) {
-    // Convert guess array elements to numbers for accurate comparison
-    guess = guess.map(Number);
-
-    // Check if maximum attempts have been reached and end the game if so
-    if (attempts >= 10) {
-        document.getElementById('feedback').innerText = 'No more attempts left. Game over.';
-        revealPassword();
-        disableInputs();
-        return;
-    }
-
+    guess = guess.map(Number); // Convert guess array elements to numbers
     let correctWellPlaced = 0;
     let correctButWrongPlace = 0;
-    let passwordCopy = [...password]; // Create a copy of the password for manipulation
+    let tempPassword = [...password]; // Copy of password for manipulation
 
-    // Count correct and well-placed numbers
+    // First pass: Check for correct and well-placed numbers
     for (let i = 0; i < guess.length; i++) {
-        if (guess[i] === passwordCopy[i]) {
+        if (guess[i] === tempPassword[i]) {
             correctWellPlaced++;
-            passwordCopy[i] = null; // Mark this number as counted
+            tempPassword[i] = null; // Mark this number as counted
         }
     }
 
-    // Count correct but wrongly placed numbers
+    // Second pass: Check for correct but wrongly placed numbers
     for (let i = 0; i < guess.length; i++) {
-        let indexOfNumInPasswordCopy = passwordCopy.indexOf(guess[i]);
-        if (guess[i] !== password[i] && indexOfNumInPasswordCopy !== -1) {
+        let indexOfNumInPassword = tempPassword.indexOf(guess[i]);
+        if (guess[i] !== password[i] && indexOfNumInPassword !== -1) {
             correctButWrongPlace++;
-            passwordCopy[indexOfNumInPasswordCopy] = null; // Mark this number as counted
+            tempPassword[indexOfNumInPassword] = null; // Mark this number as counted
         }
     }
 
-    // Directly include feedback in the history without separate display
     let feedback = `${correctWellPlaced} correct, well placed | ${correctButWrongPlace} correct, wrongly placed`;
     updateHistory(guess.join(''), feedback, isHint);
 
     if (correctWellPlaced === 3) {
-        // Player has guessed the number correctly
+        document.getElementById('winningMessage').innerText = 'Congratulations! You guessed it right.';
         revealPassword();
         startConfetti();
-        // Add winning message to history
-        updateHistory(guess.join(''), 'Congratulations! You guessed it right.', false);
         disableInputs();
-        return; // Exit the function to stop further processing
-    } 
+    } else {
+        if (!isHint) {
+            attempts++;
+            document.getElementById('attemptsLeft').innerText = 10 - attempts;
+            score -= 10;
+            document.getElementById('score').innerText = 'Score: ' + score;
+        }
 
-    if (!isHint) {
-        attempts++;
-        document.getElementById('attemptsLeft').innerHTML = 10 - attempts;
-        score -= 10;
-        document.getElementById('score').innerText = 'Score: ' + score;
-    }
-
-    if (attempts >= 10) {
-        // Game over due to reaching maximum attempts
-        revealPassword();
-        disableInputs();
-        // Add game over message to history
-        updateHistory(guess.join(''), 'Game over. The correct number was ' + password.join(''), false);
+        if (score <= 0 || attempts >= 10) {
+            document.getElementById('winningMessage').innerText = 'Game over. The correct number was ' + password.join('');
+            revealPassword();
+            disableInputs();
+        }
     }
 
     hintUsed = false;
 }
+
+function disableInputs() {
+    const guessButton = document.getElementById('guessButton');
+    const hintButton = document.getElementById('hintButton');
+
+    if (guessButton) {
+        guessButton.disabled = true;
+    } else {
+        console.log('Guess button not found');
+    }
+
+    if (hintButton) {
+        hintButton.disabled = true;
+    } else {
+        console.log('Hint button not found');
+    }
+}
+
+
+function clearZone(event) {
+    event.target.textContent = ''; // Clear the content of the dropzone
+    updateGameGuessState();
+}
+
+
+function disableInputs() {
+    document.querySelectorAll('.dropzone').forEach(zone => {
+        zone.removeAttribute('draggable');
+        zone.removeEventListener('click', clearZone);
+    });
+    document.getElementById('guessButton').disabled = true;
+    document.getElementById('hintButton').disabled = true;
+}
+
+function clearZone(event) {
+    event.target.textContent = ''; // Clear the content of the dropzone
+    updateGameGuessState();
+}
+
 
 function disableInputs() {
     for (let i = 1; i <= 3; i++) {
@@ -177,9 +194,6 @@ function disableInputs() {
 
 
 function disableInputs() {
-    for (let i = 1; i <= 3; i++) {
-        document.getElementById('guess' + i).disabled = true;
-    }
     document.getElementById('guessButton').disabled = true;
     document.getElementById('hintButton').disabled = true;
 }
@@ -246,17 +260,10 @@ function updateHistory(guess, feedback, isHint) {
 }
 
 function revealPassword() {
-    // Display the correct password in the input boxes
-    for (let i = 0; i < 3; i++) {
-        let guessInput = document.getElementById('guess' + (i + 1));
-        guessInput.value = password[i];
-        guessInput.disabled = true; // Optional: lock the input boxes
-        guessInput.style.backgroundColor = '#ffff99'; // Optional: change background color
-    }
-
-    let finalMessage = score > 0 ? 'Congratulations! The correct number was ' : 'Game over. The correct number was ';
-    document.getElementById('reveal').innerText = finalMessage + password.join('');
+    const correctPasswordElement = document.getElementById('correctPassword');
+    correctPasswordElement.value = password.join(''); // or innerText/innerHTML, depending on the element
 }
+
 
 // Automatically focus the next input field and enable the guess button after a digit is entered
 document.querySelectorAll('.guess-input').forEach(input => {
@@ -277,13 +284,6 @@ function updateGuessButtonState() {
     document.getElementById('guessButton').disabled = !allFilled;
 }
 
-// Initialize event listeners for Enter key on input fields
-function setupEnterKeySubmission() {
-    document.getElementById('guess1').addEventListener('keypress', handleKeyPress);
-    document.getElementById('guess2').addEventListener('keypress', handleKeyPress);
-    document.getElementById('guess3').addEventListener('keypress', handleKeyPress);
-}
-
 // Function to handle keypress event on input fields
 function handleKeyPress(event) {
     if (event.key === "Enter") {
@@ -291,5 +291,45 @@ function handleKeyPress(event) {
     }
 }
 
-// Call the setup function at the end of the script
-setupEnterKeySubmission();
+// Enable drag for each draggable element
+document.querySelectorAll('.draggable').forEach(elem => {
+    elem.addEventListener('dragstart', event => {
+        event.dataTransfer.setData('text/plain', event.target.dataset.number);
+    });
+});
+
+// Set up dropzones
+document.querySelectorAll('.dropzone').forEach(elem => {
+    elem.addEventListener('dragover', event => {
+        event.preventDefault(); // Necessary to allow drop
+    });
+
+    elem.addEventListener('drop', event => {
+        event.preventDefault(); 
+        const number = event.dataTransfer.getData('text/plain');
+        if (event.target.classList.contains('dropzone')) {
+            event.target.textContent = number; // Add number to dropzone
+            updateGameGuessState();
+        }
+    });
+
+    elem.addEventListener('click', () => {
+        elem.textContent = ''; // Clear the content of the dropzone
+        updateGameGuessState();
+    });
+});
+
+function clearDropzones() {
+    document.querySelectorAll('.dropzone').forEach(zone => {
+        zone.textContent = ''; // Clear the content of each dropzone
+    });
+    updateGameGuessState(); // Update the game state after clearing
+}
+
+
+function updateGameGuessState() {
+    lastGuess = Array.from(document.querySelectorAll('.dropzone')).map(zone => {
+        return zone.textContent ? parseInt(zone.textContent, 10) : null;
+    });
+    document.getElementById('guessButton').disabled = lastGuess.includes(null) || lastGuess.length < 3;
+}

@@ -16,12 +16,33 @@
                         <h2 class="card-title">Puzzle Padlock</h2>
                         <p class="card-text">Guess the 3-digit code. Each digit ranges from 0 to 9. Duplicates are possible! You have <span id="attemptsLeft">10</span> attempts left.</p>
                         
-                        <!-- Game Inputs and Buttons -->
-                        <div class="input-group mb-2">
-                            <input type="text" id="guess1" class="guess-input form-control" maxlength="2">
-                            <input type="text" id="guess2" class="guess-input form-control" maxlength="2">
-                            <input type="text" id="guess3" class="guess-input form-control" maxlength="2">
+                        <!-- Draggable Numbers -->
+                        <div id="draggableNumbers" class="my-3">
+                            <div class="draggable" draggable="true" data-number="0">0</div>
+                            <div class="draggable" draggable="true" data-number="1">1</div>
+                            <div class="draggable" draggable="true" data-number="2">2</div>
+                            <div class="draggable" draggable="true" data-number="3">3</div>
+                            <div class="draggable" draggable="true" data-number="4">4</div>
+                            <div class="draggable" draggable="true" data-number="5">5</div>
+                            <div class="draggable" draggable="true" data-number="6">6</div>
+                            <div class="draggable" draggable="true" data-number="7">7</div>
+                            <div class="draggable" draggable="true" data-number="8">8</div>
+                            <div class="draggable" draggable="true" data-number="9">9</div>
                         </div>
+
+                        <!-- Drop Zones for Guesses -->
+                        <div class="input-group mb-2">
+                            <div id="dropzone1" class="dropzone"></div>
+                            <div id="dropzone2" class="dropzone"></div>
+                            <div id="dropzone3" class="dropzone"></div>
+                        </div>
+
+                        <!-- Container for Winning Message -->
+                        <div id="winningMessage" class="text-center my-2"></div>
+                        <!-- Example of an element to display the correct password -->
+                        <div id="correctPassword"></div>
+
+                        
                         <div class="btn-group-vertical w-100">
                             <button class="btn btn-primary btn-wide" id="guessButton" onclick="checkPassword()" disabled>Guess</button>
                             <button class="btn btn-secondary btn-wide mt-2" id="hintButton" onclick="useHint()">Hint (-10 Points)</button>

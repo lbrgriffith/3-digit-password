@@ -22,3 +22,40 @@
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: Adding a subtle shadow for better visibility */
 }
+#draggableNumbers {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+
+/* Styling for draggable numbers */
+.draggable {
+    cursor: pointer;
+    width: 50px; /* Adjust width as needed */
+    height: 50px; /* Adjust height as needed */
+    border: 2px solid blue; /* Bold border */
+    text-align: center;
+    line-height: 50px; /* Align text vertically */
+    font-size: 24px; /* Larger font size */
+    font-weight: bold; /* Bold text */
+    margin: 5px; /* Space between numbers */
+    user-select: none; /* Prevent text selection */
+    background-color: lightyellow; /* Background color for visibility */
+    border-radius: 10px; /* Rounded corners */
+    /* Add more styling as needed */
+}
+
+/* Styling for dropzones */
+.dropzone {
+    width: 60px; /* Match or slightly exceed the size of draggable */
+    height: 60px;
+    border: 3px dashed green; /* Make the border dashed and bold */
+    display: inline-flex; /* Use flexbox for centering */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    font-size: 24px; /* Same font size as draggable for consistency */
+    font-weight: bold;
+    margin: 5px; /* Space around dropzones */
+    background-color: lightgrey; /* Background color for visibility */
+    border-radius: 10px; /* Rounded corners */
+}
