@@ -24,14 +24,30 @@
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: Adding a subtle shadow for better visibility */
 }
+
 #draggableNumbers {
     display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px;
+    max-width: 100%;
 }
 
-/* Draggable Numbers Styles */
+.styled-dropzone {
+    background-color: yellow;
+    color: black;
+    /* Add any other styling as needed */
+}
+
+
 .draggable {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Centers items horizontally */
+    align-items: center; /* Aligns items vertically */
+    font-size: 24px; /* Bigger font for mobile view */
+    line-height: 48px; /* Center text vertically */
+    text-align: center;
     background-color: lightslategray; /* Vibrant background color */
     border: 3px solid lightslategray; /* Thick black border */
     color: #fff; /* Black text color */
@@ -39,7 +55,6 @@
     justify-content: center; /* Center content horizontally */
     align-items: center; /* Center content vertically */
     padding: 10px; /* Example padding */
-    margin: 5px; /* Space between the numbers */
     text-align: center; /* Center the text (redundant with flexbox but kept for fallback) */
     cursor: pointer; /* Change cursor to indicate these are draggable */
     user-select: none; /* Prevent user from selecting the text */
@@ -49,6 +64,7 @@
     font-size: 24px; /* Larger font size */
     font-weight: bold; /* Bold text */
     border-radius: 10px; /* Rounded corners */
+    margin: 5px;
 }
 
 .dropzone {
@@ -64,7 +80,8 @@
     border-radius: 10px; /* Rounded corners */
     margin: 0;
     margin-right: 15px; /* Space between dropzones */
-    color: #fff; /* Black text color */
+    background-color: yellow; /* This is just for testing */
+    color: black;
 }
 .dropzone.disabled {
     background-color: #ddd; 
