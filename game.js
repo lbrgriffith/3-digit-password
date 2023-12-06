@@ -344,3 +344,4 @@ function updateGameGuessState() {
 
     document.getElementById('guessButton').disabled = !lastGuess.every(num => num !== null);
 }
+
