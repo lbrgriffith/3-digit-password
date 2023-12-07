@@ -1,12 +1,11 @@
 function checkPassword() {
-  // Assuming lastGuess array is updated correctly from the drag-and-drop logic
+  updateGameGuessState(); // Update the guess before processing
   if (lastGuess.length === 3) {
-    processGuess(lastGuess, false);
+      processGuess(lastGuess, false);
   }
-
-  // Clear the dropzones after making a guess
-  clearDropzones();
+  clearDropzones(); // Clear the dropzones after making a guess
 }
+
 
 function updateGameGuessState() {
   lastGuess = [];
@@ -118,7 +117,6 @@ function clearInputs() {
   }
   document.getElementById("guess1").focus(); // Reset focus to the first input
 }
-
 
 // ... rest of your game logic ...
 
@@ -307,15 +305,15 @@ function revealPassword() {
 }
 
 function clearDropzones() {
-    // Clear the dropzones only if they are not disabled
-    for (let i = 1; i <= 3; i++) {
-      let dropzone = document.getElementById(`dropzone${i}`);
-      if (!dropzone.classList.contains("disabled")) {
-        dropzone.textContent = ""; // Clear the content of the dropzone
-      }
+  // Clear the dropzones only if they are not disabled
+  for (let i = 1; i <= 3; i++) {
+    let dropzone = document.getElementById(`dropzone${i}`);
+    if (!dropzone.classList.contains("disabled")) {
+      dropzone.textContent = ""; // Clear the content of the dropzone
     }
-    updateGameGuessState(); // Update the game state after clearing
   }
+  updateGameGuessState(); // Update the game state after clearing
+}
 
 function updateGuessButtonState() {
   let allFilled = Array.from(document.querySelectorAll(".guess-input")).every(
@@ -325,16 +323,14 @@ function updateGuessButtonState() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+  // Attach the event listener to the guess button within the DOMContentLoaded scope
+  var guessButton = document.getElementById("guessButton");
+  if (guessButton) {
+    guessButton.addEventListener("click", checkPassword);
+  }
 
-    // Attach the event listener to the guess button within the DOMContentLoaded scope
-var guessButton = document.getElementById("guessButton");
-if (guessButton) {
-  guessButton.addEventListener("click", checkPassword);
-}
-
-
-    // Automatically focus the next input field and enable the guess button after a digit is entered
-document.querySelectorAll(".guess-input").forEach((input) => {
+  // Automatically focus the next input field and enable the guess button after a digit is entered
+  document.querySelectorAll(".guess-input").forEach((input) => {
     input.addEventListener("input", function () {
       if (this.value.length === 1) {
         let nextInput = this.nextElementSibling;
@@ -353,81 +349,64 @@ document.querySelectorAll(".guess-input").forEach((input) => {
     }
   }
 
-  // Adding event listeners to draggable elements
-  document.querySelectorAll(".draggable").forEach((elem) => {
-    elem.addEventListener("dragstart", dragStart);
-    elem.addEventListener("touchstart", touchStart);
-    elem.addEventListener("touchmove", touchMove);
-    elem.addEventListener("touchend", touchEnd);
-  });
+  // Ensure Hammer.js is loaded
+  if (typeof Hammer === "undefined") {
+    console.error("Hammer.js is not loaded");
+  } else {
+    // Initialize Hammer.js on the draggable elements
+    document.querySelectorAll(".draggable").forEach((elem) => {
+      let hammer = new Hammer.Manager(elem, {
+        recognizers: [[Hammer.Pan, { direction: Hammer.DIRECTION_ALL }]],
+      });
 
-  // Adding event listeners to dropzones
-  document.querySelectorAll(".dropzone").forEach((elem) => {
-    elem.addEventListener("dragover", (event) => event.preventDefault());
-    elem.addEventListener("drop", (event) => handleDrop(event, elem));
-    elem.addEventListener("touchend", (event) => handleDrop(event, elem));
-  });
+      let ghostElement;
 
+      hammer.on("panstart", function (e) {
+        ghostElement = elem.cloneNode(true);
+        ghostElement.style.position = "absolute";
+        ghostElement.style.left = e.center.x + "px";
+        ghostElement.style.top = e.center.y + "px";
+        document.body.appendChild(ghostElement);
+      });
 
+      hammer.on("pan", function (e) {
+        if (ghostElement) {
+          ghostElement.style.transform = `translate(${e.deltaX}px, ${e.deltaY}px)`;
+        }
+      });
 
-  // Function to handle the start of dragging
-  function dragStart(event) {
-    let targetId = event.target.id;
-    if (event.type === "touchstart") {
-      targetId = event.targetTouches[0].target.id;
-    }
-    event.dataTransfer.setData("text/plain", targetId);
+      hammer.on("panend", function (e) {
+        if (ghostElement) {
+          document.body.removeChild(ghostElement);
+        }
+
+        let dropZone = document.elementFromPoint(
+          e.center.x - window.scrollX,
+          e.center.y - window.scrollY
+        );
+        if (dropZone && dropZone.classList.contains("dropzone")) {
+          dropZone.textContent += elem.textContent; // Append the number
+          dropZone.classList.add("filled");
+          checkAllDropzonesFilled();
+        }
+      });
+    });
   }
 
-  // Function to handle dropping onto a dropzone
-  function handleDrop(event, dropzone) {
-    event.preventDefault();
-    const number = event.dataTransfer.getData("text/plain");
-    dropzone.textContent = number;
-
-    // Set the color of the dropzone to match the draggable item
-    let draggableElement = document.getElementById(number);
-    if (draggableElement) {
-        dropzone.style.backgroundColor = 'yellow'; // Bright yellow background
-        dropzone.style.color = 'black'; // Black number color
-    }
-
-    dropzone.classList.add('styled-dropzone');
-
-    updateGameGuessState();
+  function checkAllDropzonesFilled() {
+    // Logic to check if all dropzones are filled and enable "Guess" button
+    const allFilled = Array.from(document.querySelectorAll(".dropzone")).every(
+      (dz) => dz.textContent.trim().length === 1
+    ); // Adjust this condition based on your game's rules
+    document.getElementById("guessButton").disabled = !allFilled;
   }
 
-  function touchStart(event) {
-    // Identify the element being dragged
-    let draggedElem = event.target;
-
-    // Set data to transfer (you can use the element's text or any identifier)
-    draggedElem.dataset.draggedData = draggedElem.textContent;
-  }
-
-  function touchMove(event) {
-    event.preventDefault();
-    let touch = event.touches[0];
-    let target = document.elementFromPoint(touch.clientX, touch.clientY);
-
-    if (target && target.classList.contains("dropzone")) {
-      // Highlight potential drop target
-      target.style.backgroundColor = "#f0f0f0";
-    }
-  }
-
-  function touchEnd(event) {
-    let touch = event.changedTouches[0];
-    let target = document.elementFromPoint(touch.clientX, touch.clientY);
-
-    if (target && target.classList.contains("dropzone")) {
-      // Transfer the data from the dragged element to the dropzone
-      target.textContent = event.target.dataset.draggedData;
-      updateGameGuessState();
-    }
-
-    // Clear any temporary data or styles
-    event.target.dataset.draggedData = "";
+  function checkAllFilled() {
+    // Check if all dropzones are filled
+    const allFilled =
+      document.querySelectorAll(".dropzone.filled").length ===
+      document.querySelectorAll(".dropzone").length;
+    document.getElementById("guessButton").disabled = !allFilled;
   }
 });
 
