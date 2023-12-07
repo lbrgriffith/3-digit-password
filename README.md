@@ -1,4 +1,5 @@
 # Puzzle Padlock Game
+<img src="./images/lock.webp" alt="Puzzle Pad" width="175" style="height: auto;" />
 Introduction
 "Puzzle Padlock" is a simple yet engaging web-based game where players try to guess a randomly generated 3-digit password within a limited number of attempts. 
 The game provides feedback on each guess, informing the player about the number of digits that are correct and whether they are in the correct position. 
