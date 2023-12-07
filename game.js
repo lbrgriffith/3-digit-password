@@ -394,9 +394,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function checkAllDropzonesFilled() {
-    // Update the guess button state based on filled dropzones
     const allFilled = Array.from(document.querySelectorAll(".dropzone")).every(
-      (dz) => dz.classList.contains("filled")
+      (dz) => dz.textContent.trim() || dz.classList.contains("filled")
     );
     document.getElementById("guessButton").disabled = !allFilled;
   }
