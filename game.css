@@ -8,58 +8,191 @@
 .input-group, .btn-group-vertical {
     justify-content: center;
 }
+
 .btn-wide {
     width: 100%;
 }
+
 .score-container {
     position: absolute;
     top: 10px;
     right: 20px; /* Increased right margin for buffering */
     font-size: 20px;
     z-index: 1000;
-    background: white;
+    background: #345343;
     padding: 5px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Optional: Adding a subtle shadow for better visibility */
 }
+
 #draggableNumbers {
     display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 10px;
+    max-width: 100%;
 }
 
-/* Styling for draggable numbers */
-.draggable {
-    cursor: pointer;
-    width: 50px; /* Adjust width as needed */
-    height: 50px; /* Adjust height as needed */
-    border: 2px solid blue; /* Bold border */
+.styled-dropzone {
+    background-color: yellow;
+    color: black;
+    /* Add any other styling as needed */
+}
+.title-banner {
     text-align: center;
-    line-height: 50px; /* Align text vertically */
-    font-size: 24px; /* Larger font size */
-    font-weight: bold; /* Bold text */
-    margin: 5px; /* Space between numbers */
-    user-select: none; /* Prevent text selection */
-    background-color: lightyellow; /* Background color for visibility */
-    border-radius: 10px; /* Rounded corners */
-    /* Add more styling as needed */
+    font-size: 20px; /* Mobile-friendly size */
+    font-weight: bold;
+    color: #fff; /* White text */
+    background-color: #007bff; /* A vibrant color for the banner */
+    padding: 10px;
+    margin-bottom: 10px; /* Space between the title and draggable items */
+    border-radius: 5px;
 }
 
-/* Styling for dropzones */
+
+.draggable {
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    width: 50px; /* Set width */
+    height: 50px; /* Set height */
+    padding: 10px;
+    margin: 5px;
+    border: 3px solid lightslategray; /* Border styling */
+    border-radius: 10px; /* Rounded corners */
+    background-color: lightslategray; /* Background color */
+    color: #fff; /* Text color */
+    font-size: 24px; /* Font size */
+    font-weight: bold; /* Bold text */
+    cursor: pointer; /* Indicate draggable */
+    user-select: none; /* Prevent text selection */
+}
+
+
 .dropzone {
     width: 60px; /* Match or slightly exceed the size of draggable */
     height: 60px;
-    border: 3px dashed green; /* Make the border dashed and bold */
+    border: 3px dashed #000; /* Make the border dashed and bold */
     display: inline-flex; /* Use flexbox for centering */
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
     font-size: 24px; /* Same font size as draggable for consistency */
     font-weight: bold;
-    margin: 5px; /* Space around dropzones */
-    background-color: lightgrey; /* Background color for visibility */
+    background-color: #ff5722; /* Background color for visibility */
     border-radius: 10px; /* Rounded corners */
+    margin: 0;
+    margin-right: 15px; /* Space between dropzones */
+    background-color: yellow; /* This is just for testing */
+    color: black;
 }
 .dropzone.disabled {
-    background-color: #ddd; // Example: gray background to indicate it's locked
-    pointer-events: none; // Prevent further interaction
+    background-color: #ddd; 
+    pointer-events: none; 
+}
+.score-box {
+    display: flex;
+    justify-content: center;
+    border: 1px solid #007bff;
+    padding: 5px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* Header styles */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    background-color: #ff5722; /* Your chosen vibrant color */
+    padding: 1rem;
+    color: #ffffff;
+    border: 5px solid #ffffff; /* Thick white border */
+    border-radius: 10px 10px 0 0;
+}
+
+.containerf {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 3rem;
+    background-color: #ff5722; /* Your chosen vibrant color */
+    padding: 1rem;
+    color: #ffffff;
+    border: 5px solid #ffffff; /* Thick white border */
+    border-radius: 0 0 10px 10px; /* Flat top, rounded bottom */
+}
+
+
+/* Add styles for other elements inside the header if necessary */
+.header .logo img {
+    width: auto; 
+    height: 200px;
+}
+
+.header .card-title {
+    margin: 0;
+}
+
+/* Adjust margins and padding as needed for alignment */
+.header .btn {
+    margin-left: 10px;
+}
+
+/* Additional game styles */
+body {
+    background-color: lightslategray;
+}
+
+.containerd {
+    background: #fff;
+    border-radius: 15px; 
+    margin-top: 10px;
+    border: 5px solid #ffffff; /* Thick white border */
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Game Controls */
+.game-controls {
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+    align-items: center; /* Center children horizontally */
+    justify-content: center; /* Center children vertically, if there's extra space */
+    margin-bottom: 20px; /* Space below the game controls */
+}
+
+.dropzones-container {
+    display: flex;
+    justify-content: center; /* Center the dropzones horizontally */
+    gap: 20px; /* Adjust the space between dropzones */
+}
+
+.dropzones {
+    display: flex; /* Align dropzones horizontally */
+}
+
+/* Additional styles for buttons and other elements */
+/* Style for the guess button */
+#guessButton {
+    width: 200px; /* Makes the button full width */
+    margin-top: 20px; /* Add some space above the button */
+    /* ... other existing styles ... */
+}
+.draggable-container {
+    border: 2px solid #007bff; /* Vibrant border color */
+    padding: 10px;
+    border-radius: 10px; /* Rounded corners */
+    margin-bottom: 20px; /* Space below the container */
+}
+
+.title-banner {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px; /* Space between the title and draggable items */
 }
