@@ -106,7 +106,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 3rem;
+  margin-top: 0rem;
   background-color: #ff5722;
   padding: 1rem;
   color: #ffffff;
@@ -170,9 +170,13 @@ body {
   margin-bottom: 10px;
 }
 #attemptsLeft {
-  text-align: center; /* Center the text */
-  color: #007bff; /* A color that stands out, adjust as needed */
-  font-weight: bold; /* Make the text bold */
-  margin-top: 10px; /* Space from the top */
-  font-size: 18px; /* Larger font size for visibility */
+  text-align: center;
+  color: #000;
+
+  margin-top: 10px;
+  font-size: 18px;
+}
+#attemptsNumber {
+  color: #ff5722;
+  font-weight: bold;
 }

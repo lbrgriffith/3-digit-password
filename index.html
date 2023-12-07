@@ -72,17 +72,17 @@
               <div class="btn-group-vertical">
                 <button
                   id="giveUpButton"
-                  class="btn btn-danger"
+                  class="btn btn-primary"
                   onclick="giveUp()"
                 >
-                  <i class="bi bi-x-circle"></i>&nbsp;Exit
+                <i class="bi bi-escape"></i>&nbsp;Quit
                 </button>
-                <button id="instructionButton" class="btn btn-info">
+                <button id="instructionButton" class="btn btn-primary">
                   <i class="bi bi-question-circle"></i>&nbsp;Help
                 </button>
                 <button
                   id="hintButton"
-                  class="btn btn-secondary"
+                  class="btn btn-primary"
                   onclick="useHint()"
                 >
                   <i class="bi bi-search-heart"></i>&nbsp;Hint
@@ -120,15 +120,17 @@
               </div>
             </div>
             <button class="btn btn-primary" id="guessButton" disabled>
-              UNLOCK
+              <i class="bi bi-unlock"></i>&nbsp;UNLOCK
             </button>
+            <div id="attemptsLeft"><i class="bi bi-sort-numeric-down-alt"></i> REMAINING: <span id="attemptsNumber">10</span></div>
           </div>
 
           <div id="winningMessage" class="text-center my-2"></div>
           <div id="correctPassword"></div>
-          <div id="attemptsLeft">Attempts Remaining: <span id="attemptsNumber">10</span></div>
-
+                      
+          <h5 class="text-center"><i class="bi bi-clock-history"></i>&nbsp;H I S T O R Y</h5>
           <div class="containerf">
+
             <div id="history"></div>
             <p id="reveal"></p>
           </div>
