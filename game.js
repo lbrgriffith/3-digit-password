@@ -232,21 +232,21 @@ function giveUp() {
   // Reveal the correct password
   revealPassword();
 
+  // Calculate the remaining attempts and deduct from score
+  let remainingAttempts = 10 - attempts;
+  score -= remainingAttempts * 10; // Assuming each wrong guess costs 10 points
+
+  // Update the score display
+  document.getElementById("score").innerText = "Score: " + score;
+
   // Disable further inputs and buttons
-  document.querySelectorAll(".dropzone").forEach((zone) => {
-    zone.classList.add("disabled"); // Disable the dropzones
-  });
-
-  const guessButton = document.getElementById("guessButton");
-  const hintButton = document.getElementById("hintButton");
-
-  if (guessButton) guessButton.disabled = true;
-  if (hintButton) hintButton.disabled = true;
+  disableInputs();
 
   // Update the game over message
   document.getElementById("winningMessage").innerText =
-    "Game over. The correct number was " + password.join("");
+      "Game over. The correct number was " + password.join("");
 }
+
 
 function useHint() {
   if (score > 0 && !hintUsed) {
