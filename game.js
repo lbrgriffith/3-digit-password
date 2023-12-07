@@ -305,15 +305,17 @@ function revealPassword() {
 }
 
 function clearDropzones() {
-  // Clear the dropzones only if they are not disabled
-  for (let i = 1; i <= 3; i++) {
-    let dropzone = document.getElementById(`dropzone${i}`);
-    if (!dropzone.classList.contains("disabled")) {
-      dropzone.textContent = ""; // Clear the content of the dropzone
-    }
-  }
-  updateGameGuessState(); // Update the game state after clearing
+  document.querySelectorAll('.dropzone').forEach(dropzone => {
+      if (!dropzone.classList.contains('disabled')) {
+          dropzone.textContent = ''; // Clear content
+          dropzone.classList.remove('filled'); // Remove filled class if present
+      }
+  });
+  // Reset lastGuess array for a new guess
+  lastGuess = [];
+  updateGameGuessState(); // Re-evaluate the state of the guess button
 }
+
 
 function updateGuessButtonState() {
   let allFilled = Array.from(document.querySelectorAll(".guess-input")).every(
