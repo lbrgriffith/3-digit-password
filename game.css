@@ -42,30 +42,22 @@
 
 .draggable {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center; /* Centers items horizontally */
-    align-items: center; /* Aligns items vertically */
-    font-size: 24px; /* Bigger font for mobile view */
-    line-height: 48px; /* Center text vertically */
-    text-align: center;
-    background-color: lightslategray; /* Vibrant background color */
-    border: 3px solid lightslategray; /* Thick black border */
-    color: #fff; /* Black text color */
-    display: flex; /* Use flexbox to center content */
     justify-content: center; /* Center content horizontally */
     align-items: center; /* Center content vertically */
-    padding: 10px; /* Example padding */
-    text-align: center; /* Center the text (redundant with flexbox but kept for fallback) */
-    cursor: pointer; /* Change cursor to indicate these are draggable */
-    user-select: none; /* Prevent user from selecting the text */
-    /* Add width and height to ensure there's space for centering */
-    width: 50px; /* Example width */
-    height: 50px; /* Example height */
-    font-size: 24px; /* Larger font size */
-    font-weight: bold; /* Bold text */
-    border-radius: 10px; /* Rounded corners */
+    width: 50px; /* Set width */
+    height: 50px; /* Set height */
+    padding: 10px;
     margin: 5px;
+    border: 3px solid lightslategray; /* Border styling */
+    border-radius: 10px; /* Rounded corners */
+    background-color: lightslategray; /* Background color */
+    color: #fff; /* Text color */
+    font-size: 24px; /* Font size */
+    font-weight: bold; /* Bold text */
+    cursor: pointer; /* Indicate draggable */
+    user-select: none; /* Prevent text selection */
 }
+
 
 .dropzone {
     width: 60px; /* Match or slightly exceed the size of draggable */
