@@ -89,6 +89,14 @@
     background-color: #ddd; 
     pointer-events: none; 
 }
+.score-box {
+    display: flex;
+    justify-content: center;
+    border: 1px solid #007bff;
+    padding: 5px;
+    border-radius: 5px;
+    font-weight: bold;
+}
 
 /* Header styles */
 .header {

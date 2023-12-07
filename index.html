@@ -33,9 +33,10 @@
           <div class="modal-body">
             <!-- Your instructions here -->
             Guess the 3-digit code to unlock.
-            <br />Each digit ranges from <strong>0</strong> to <strong>9</strong>. 
-            <br />Each digit can be used more than once! 
-            <br />You have only have 10 attempts and then you need to come back in 20 minutes.
+            <br />Each digit ranges from <strong>0</strong> to
+            <strong>9</strong>. <br />Each digit can be used more than once!
+            <br />You have only have 10 attempts and then you need to come back
+            in 20 minutes.
           </div>
           <div class="modal-footer">
             <button
@@ -60,27 +61,33 @@
             </div>
 
             <div>
-              <button
-                id="giveUpButton"
-                class="btn btn-danger"
-                onclick="giveUp()"
-              >
-                Quit
-              </button>
-              <button id="instructionButton" class="btn btn-info">?</button>
-              <button
-                id="hintButton"
-                class="btn btn-secondary"
-                onclick="useHint()"
-              >
-                Hint
-              </button>
-              <span id="score">Score: 100</span>
+              <div class="btn-group-vertical">
+                <button
+                  id="giveUpButton"
+                  class="btn btn-danger"
+                  onclick="giveUp()"
+                >
+                Give Up
+                </button>
+                <button id="instructionButton" class="btn btn-info">
+                  Instructions
+                </button>
+                <button
+                  id="hintButton"
+                  class="btn btn-secondary"
+                  onclick="useHint()"
+                >
+                  Hint
+                </button>
+              </div>
+              <div id="score-container" class="score-box">
+                <span id="score">Score: 100</span>
+            </div>
             </div>
           </div>
 
           <div class="draggable-container">
-            <div class="title-banner">D R A G <br />N U M B E R S</div>
+            <div class="title-banner">N U M B E R <br />P A D</div>
 
             <div id="draggableNumbers" class="my-3">
               <div class="draggable" draggable="true" data-number="0">0</div>
