@@ -169,3 +169,10 @@ body {
   border-radius: 5px;
   margin-bottom: 10px;
 }
+#attemptsLeft {
+  text-align: center; /* Center the text */
+  color: #007bff; /* A color that stands out, adjust as needed */
+  font-weight: bold; /* Make the text bold */
+  margin-top: 10px; /* Space from the top */
+  font-size: 18px; /* Larger font size for visibility */
+}
