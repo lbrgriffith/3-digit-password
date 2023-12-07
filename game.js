@@ -160,7 +160,7 @@ function processGuess(guess, isHint) {
   } else {
     if (!isHint) {
       attempts++;
-      document.getElementById("attemptsLeft").innerText = 10 - attempts;
+      document.getElementById("attemptsNumber").innerText = 10 - attempts;
       score -= 10;
       document.getElementById("score").innerText = "Score: " + score;
     }
