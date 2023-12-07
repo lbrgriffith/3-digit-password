@@ -1,11 +1,10 @@
 function checkPassword() {
-  updateGameGuessState(); // Update the guess before processing
+  updateGameGuessState(); // Update the guess values
   if (lastGuess.length === 3) {
-      processGuess(lastGuess, false);
+    processGuess(lastGuess, false);
   }
-  clearDropzones(); // Clear the dropzones after making a guess
+  clearDropzones(); // Clear the dropzones for the next guess
 }
-
 
 function updateGameGuessState() {
   lastGuess = [];
@@ -15,6 +14,7 @@ function updateGameGuessState() {
     lastGuess.push(number ? parseInt(number, 10) : null);
   }
 
+  // Update guess button state based on the filled dropzones
   document.getElementById("guessButton").disabled = !lastGuess.every(
     (num) => num !== null
   );
@@ -355,49 +355,49 @@ document.addEventListener("DOMContentLoaded", function () {
   } else {
     // Initialize Hammer.js on the draggable elements
     document.querySelectorAll(".draggable").forEach((elem) => {
-      let hammer = new Hammer.Manager(elem, {
-        recognizers: [[Hammer.Pan, { direction: Hammer.DIRECTION_ALL }]],
+      const hammer = new Hammer.Manager(elem);
+      hammer.add(
+        new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 10 })
+      );
+
+      let originalRect;
+
+      hammer.on("panstart", function (ev) {
+        originalRect = elem.getBoundingClientRect();
       });
 
-      let ghostElement;
+      hammer.on("pan", function (ev) {
+        const posX = originalRect.left + ev.deltaX;
+        const posY = originalRect.top + ev.deltaY;
 
-      hammer.on("panstart", function (e) {
-        ghostElement = elem.cloneNode(true);
-        ghostElement.style.position = "absolute";
-        ghostElement.style.left = e.center.x + "px";
-        ghostElement.style.top = e.center.y + "px";
-        document.body.appendChild(ghostElement);
+        elem.style.left = `${posX}px`;
+        elem.style.top = `${posY}px`;
       });
 
-      hammer.on("pan", function (e) {
-        if (ghostElement) {
-          ghostElement.style.transform = `translate(${e.deltaX}px, ${e.deltaY}px)`;
-        }
-      });
-
-      hammer.on("panend", function (e) {
-        if (ghostElement) {
-          document.body.removeChild(ghostElement);
-        }
-
-        let dropZone = document.elementFromPoint(
-          e.center.x - window.scrollX,
-          e.center.y - window.scrollY
-        );
+      hammer.on("panend", function (ev) {
+        const dropZone = document.elementFromPoint(ev.center.x, ev.center.y);
         if (dropZone && dropZone.classList.contains("dropzone")) {
-          dropZone.textContent += elem.textContent; // Append the number
-          dropZone.classList.add("filled");
-          checkAllDropzonesFilled();
+          // Check if the dropzone is already filled
+          if (!dropZone.classList.contains("filled")) {
+            dropZone.textContent = elem.textContent;
+            dropZone.classList.add("filled");
+          }
         }
+
+        // Reset position of draggable element
+        elem.style.left = `${originalRect.left}px`;
+        elem.style.top = `${originalRect.top}px`;
+
+        checkAllDropzonesFilled();
       });
     });
   }
 
   function checkAllDropzonesFilled() {
-    // Logic to check if all dropzones are filled and enable "Guess" button
+    // Update the guess button state based on filled dropzones
     const allFilled = Array.from(document.querySelectorAll(".dropzone")).every(
-      (dz) => dz.textContent.trim().length === 1
-    ); // Adjust this condition based on your game's rules
+      (dz) => dz.classList.contains("filled")
+    );
     document.getElementById("guessButton").disabled = !allFilled;
   }
 

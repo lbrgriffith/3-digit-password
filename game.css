@@ -38,6 +38,16 @@
     color: black;
     /* Add any other styling as needed */
 }
+.title-banner {
+    text-align: center;
+    font-size: 20px; /* Mobile-friendly size */
+    font-weight: bold;
+    color: #fff; /* White text */
+    background-color: #007bff; /* A vibrant color for the banner */
+    padding: 10px;
+    margin-bottom: 10px; /* Space between the title and draggable items */
+    border-radius: 5px;
+}
 
 
 .draggable {
@@ -85,7 +95,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
     background-color: #ff5722; /* Your chosen vibrant color */
     padding: 1rem;
     color: #ffffff;
@@ -160,4 +170,21 @@ body {
     width: 200px; /* Makes the button full width */
     margin-top: 20px; /* Add some space above the button */
     /* ... other existing styles ... */
+}
+.draggable-container {
+    border: 2px solid #007bff; /* Vibrant border color */
+    padding: 10px;
+    border-radius: 10px; /* Rounded corners */
+    margin-bottom: 20px; /* Space below the container */
+}
+
+.title-banner {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px; /* Space between the title and draggable items */
 }
